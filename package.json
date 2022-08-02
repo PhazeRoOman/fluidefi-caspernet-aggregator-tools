@@ -1,6 +1,6 @@
 {
-  "name": "casper-net-aggregator-clean",
-  "version": "1.0.0",
+  "name": "fl-casper-tools",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "test": "mocha --require ts-node/register test/unit/**/*.test.ts",
