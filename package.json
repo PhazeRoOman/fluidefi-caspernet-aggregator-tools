@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "test": "mocha --require ts-node/register test/unit/**/*.test.ts",
+    "test": "mocha --require ts-node/register test/unit/**/*.test.ts test/integration/**/*.test.ts",
     "build": "tsc -p ."
   },
   "keywords": [],
