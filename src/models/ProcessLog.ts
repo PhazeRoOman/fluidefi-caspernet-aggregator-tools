@@ -1,16 +1,11 @@
-import { IDataStore } from '../interfaces/IDataStore';
-
-import {
-  FindProcessLogResult,
-  CreateProcessLogResult,
-  UpdateProcessLogResult
-} from '../types/models'
+import { IDataStore } from '../interfaces';
+import { FindProcessLogResult, CreateProcessLogResult, UpdateProcessLogResult } from '../types';
 
 export type ProcessLogFields = {
   processName: string;
   subProcessName: string;
   blockNumber: number;
-}
+};
 
 export class ProcessLog {
   private datastore!: IDataStore;
@@ -28,19 +23,15 @@ export class ProcessLog {
       ) values ($1, $2, $3);
     `;
 
-    const result = await this.datastore.write(query, [
-      fields.processName,
-      fields.subProcessName,
-      fields.blockNumber,
-    ]);
+    const result = await this.datastore.write(query, [fields.processName, fields.subProcessName, fields.blockNumber]);
 
     return {
       success: result.success,
       processName: fields.processName,
       subProcessName: fields.subProcessName,
       error: result.error,
-      result: result.result
-    }
+      result: result.result,
+    };
   }
 
   async update(fields: ProcessLogFields): Promise<UpdateProcessLogResult> {
@@ -51,19 +42,15 @@ export class ProcessLog {
       AND sub_process_name = $3;
     `;
 
-    const result = await this.datastore.write(query, [
-      fields.blockNumber,
-      fields.processName,
-      fields.subProcessName,
-    ]);
+    const result = await this.datastore.write(query, [fields.blockNumber, fields.processName, fields.subProcessName]);
 
     return {
       success: result.success,
       processName: fields.processName,
       subProcessName: fields.subProcessName,
       error: result.error,
-      result: result.result
-    }
+      result: result.result,
+    };
   }
 
   async find(processName: string, subProcessName: string): Promise<FindProcessLogResult> {
@@ -77,17 +64,17 @@ export class ProcessLog {
 
     return {
       success: result.success,
-      processName: processName,
-      subProcessName: subProcessName,
+      processName,
+      subProcessName,
       error: result.error,
       result: result.result,
-    }
+    };
   }
 
   async findAndReturnBlockNumber(processName: string, subProcessName: string): Promise<number | undefined> {
     const result = await this.find(processName, subProcessName);
 
-    if(result.success && !!result.result && result.result.length > 0) {
+    if (result.success && !!result.result && result.result.length > 0) {
       return result.result[0].block_number;
     }
 
@@ -97,7 +84,7 @@ export class ProcessLog {
   async findAndReturnLastProcessed(processName: string, subProcessName: string): Promise<string | undefined> {
     const result = await this.find(processName, subProcessName);
 
-    if(result.success && !!result.result) {
+    if (result.success && !!result.result) {
       return result.result[0].last_processed;
     }
 

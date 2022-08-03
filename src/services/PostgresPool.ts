@@ -1,11 +1,8 @@
-import { IDataStore } from '../interfaces/IDataStore';
+import { IDataStore } from '../interfaces';
 import { Pool } from 'pg';
 import { settings } from '../config/settings';
 
-import {
-  ReadQueryResult,
-  WriteQueryResult
-} from '../types/services';
+import { ReadQueryResult, WriteQueryResult } from '../types';
 
 export class PostgresPool implements IDataStore {
   private readPool!: Pool;
@@ -14,51 +11,41 @@ export class PostgresPool implements IDataStore {
   constructor() {
     this.readPool = new Pool({
       ...settings.readOptions,
-      max: parseInt(settings.maxReadPoolConnections)
+      max: parseInt(settings.maxReadPoolConnections, 10),
     });
 
     this.writePool = new Pool({
       ...settings.writeOptions,
-      max: parseInt(settings.maxWritePoolConnections)
+      max: parseInt(settings.maxWritePoolConnections, 10),
     });
   }
 
   async read(query: string, values: any[]): Promise<ReadQueryResult> {
     return new Promise((resolve, reject) => {
-      this.readPool.connect((err: any, client: any, release: any) => {
-        if (err) {
-          console.log('Error acquiring reader client');
-          console.log(err);
-          // TODO - log error
-
+      this.readPool.connect((error: any, client: any, release: any) => {
+        if (error) {
           resolve({
             success: false,
-            error: err.toString()
+            error: `Error acquiring reader client ${error.toString()}`,
           });
         } else {
           client.query(query, values, (err: any, result: any) => {
             release();
 
-            if(err) {
-              console.log('Error making read query: ' + query);
-              console.log(err);
-              // TODO - log error
-
+            if (err) {
               resolve({
                 success: false,
-                error: err.toString()
+                error: `Error making read query: ${err.toString()}`,
               });
-            } else if(result && result.hasOwnProperty('rows')) {
+            } else if (result && result.hasOwnProperty('rows')) {
               resolve({
                 success: true,
-                result: result.rows.slice()
+                result: result.rows.slice(),
               });
             } else {
-              console.log("No rows in result for read query: ", query);
-
               resolve({
                 success: false,
-                error: 'No rows in query'
+                error: 'No rows in result for read query',
               });
             }
           });
@@ -69,53 +56,42 @@ export class PostgresPool implements IDataStore {
 
   async write(query: string, values: any[]): Promise<WriteQueryResult> {
     return new Promise((resolve, reject) => {
-      this.writePool.connect((err: any, client: any, release: any) => {
-        if (err) {
-          console.log('Error acquiring writer client');
-          console.log(err);
-          // TODO - log error
-
+      this.writePool.connect((error: any, client: any, release: any) => {
+        if (error) {
           resolve({
             success: false,
-            error: err.toString()
+            error: `Error acquiring writer client ${error.toString()}`,
           });
         } else {
           client.query(query, values, (err: any, result: any) => {
             release();
 
-            if(err) {
-              if(err.hasOwnProperty('message') && err.message.includes('unique constraint')) {
+            if (err) {
+              if (err.hasOwnProperty('message') && err.message.includes('unique constraint')) {
                 resolve({
                   success: true,
-                  result: []
+                  result: [],
                 });
-              } else if(err.toString().includes('unique constraint')) {
+              } else if (err.toString().includes('unique constraint')) {
                 resolve({
                   success: true,
-                  result: []
+                  result: [],
                 });
               } else {
-                console.log('Error making write query: ' + query);
-                console.log(err);
-                // TODO - log error
-
                 resolve({
                   success: false,
-                  error: err.toString()
+                  error: `Error making write query: ${err.toString()}`,
                 });
               }
-            } else if(result && result.hasOwnProperty('rows')) {
+            } else if (result && result.hasOwnProperty('rows')) {
               resolve({
                 success: true,
-                result: result.rows.slice()
+                result: result.rows.slice(),
               });
             } else {
-              console.log("No rows in result for write query: ");
-
-              // TODO - confirm result from successful writes
               resolve({
                 success: false,
-                error: 'No rows in query'
+                error: 'No rows in result for write query:',
               });
             }
           });

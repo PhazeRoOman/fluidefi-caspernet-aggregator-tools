@@ -2,14 +2,14 @@ export type CreateBlockResult = {
   success: boolean;
   height?: number;
   error?: string;
-}
+};
 
 export type FindBlockResult = {
   success: boolean;
   height?: number;
   error?: string;
   result?: any;
-}
+};
 
 export type CreateProcessLogResult = {
   success: boolean;
@@ -17,7 +17,7 @@ export type CreateProcessLogResult = {
   subProcessName: string;
   error?: string;
   result?: any;
-}
+};
 
 export type UpdateProcessLogResult = {
   success: boolean;
@@ -25,7 +25,7 @@ export type UpdateProcessLogResult = {
   subProcessName: string;
   error?: string;
   result?: any;
-}
+};
 
 export type FindProcessLogResult = {
   success: boolean;
@@ -33,4 +33,4 @@ export type FindProcessLogResult = {
   subProcessName: string;
   error?: string;
   result?: any;
-}
+};

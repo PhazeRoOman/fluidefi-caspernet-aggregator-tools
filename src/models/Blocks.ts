@@ -1,6 +1,6 @@
-import { IDataStore } from '../interfaces/IDataStore';
-import { IBlocks } from '../interfaces/IBlocks';
-import { CreateBlockResult, FindBlockResult } from '../types/models'
+import { IDataStore } from '../interfaces';
+import { IBlocks } from '../interfaces';
+import { CreateBlockResult, FindBlockResult } from '../types';
 
 export class Blocks implements IBlocks {
   private datastore!: IDataStore;
@@ -30,7 +30,7 @@ export class Blocks implements IBlocks {
       ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);
     `;
 
-    let result = await this.datastore.write(query, [
+    const result = await this.datastore.write(query, [
       fields.blockHash,
       fields.parentHash,
       fields.stateRootHash,
@@ -51,8 +51,8 @@ export class Blocks implements IBlocks {
     return {
       success: result.success,
       height: fields.blockHeight,
-      error: result.error
-    }
+      error: result.error,
+    };
   }
 
   async findByHeight(height: number): Promise<FindBlockResult> {
@@ -65,10 +65,10 @@ export class Blocks implements IBlocks {
 
     return {
       success: result.success,
-      height: height,
+      height,
       error: result.error,
       result: result.result,
-    }
+    };
   }
 
   async findAll(): Promise<FindBlockResult> {
@@ -82,6 +82,6 @@ export class Blocks implements IBlocks {
       success: result.success,
       error: result.error,
       result: result.result,
-    }
+    };
   }
 }

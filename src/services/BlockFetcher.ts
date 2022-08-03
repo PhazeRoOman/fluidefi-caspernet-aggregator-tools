@@ -1,6 +1,6 @@
-import { IBlockchain } from '../interfaces/IBlockchain';
-import { IBlockFetcher } from '../interfaces/IBlockFetcher';
-import { BlockFetcherResult } from '../types/services';
+import { IBlockchain } from '../interfaces';
+import { IBlockFetcher } from '../interfaces';
+import { BlockFetcherResult } from '../types';
 
 export class BlockFetcher implements IBlockFetcher {
   private blockchain!: IBlockchain;
@@ -15,8 +15,8 @@ export class BlockFetcher implements IBlockFetcher {
     return {
       success: result.success,
       error: result.error,
-      height: height,
-      block: result.block
-    }
+      height,
+      block: result.block,
+    };
   }
 }

@@ -1,9 +1,9 @@
 import { IBlockParser } from '../interfaces/IBlockParser';
-import { BlockParserResult } from '../types/services';
+import { BlockParserResult } from '../types';
 
 export class BlockParser implements IBlockParser {
   apply(block: any): BlockParserResult {
-    let parserResult: BlockParserResult = { success: false };
+    const parserResult: BlockParserResult = { success: false };
 
     try {
       parserResult.fields = {
@@ -21,13 +21,13 @@ export class BlockParser implements IBlockParser {
         proposer: block.block.body.proposer,
         deployHashes: block.block.body.deploy_hashes,
         transferHashes: block.block.body.transfer_hashes,
-        apiVersion: block.api_version
+        apiVersion: block.api_version,
       };
 
       parserResult.success = true;
-    } catch(err) {
+    } catch (err) {
       // todo - log error
-      //console.log(err);
+      // console.log(err);
       parserResult.error = err.toString();
       parserResult.success = false;
     }

@@ -13,4 +13,4 @@ export type CasperBlockFields = {
   proposer: string;
   deployHashes: string;
   transferHashes: string;
-}
+};
