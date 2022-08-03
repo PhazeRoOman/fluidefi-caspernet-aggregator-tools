@@ -1,23 +1,24 @@
 import { expect } from 'chai';
-import { BlockConsumer } from '../../../src/services/BlockConsumer';
-import { IBlockConsumer } from '../../../src/interfaces/IBlockConsumer';
-import { IBlockFetcher } from '../../../src/interfaces/IBlockFetcher';
-import { IBlockParser } from '../../../src/interfaces/IBlockParser';
-import {Blocks} from "../../../src/models/Blocks";
+import { BlockConsumer } from '../../../src';
+import { IBlockConsumer } from '../../../src';
+import { IBlockFetcher } from '../../../src';
+import { IBlockParser } from '../../../src';
+import {Blocks} from '../../../src';
 import {MockPostgresClient} from "../../mocks/MockPostgresClient";
-import {IDataStore} from "../../../src/interfaces/IDataStore";
-import {IBlocks} from "../../../src/interfaces/IBlocks";
+import {IDataStore} from '../../../src';
+import {IBlocks} from '../../../src';
 import {createBlocksTableQuery, createProcessLogTableQuery} from "../../fixtures/queries";
-import {IBlockchain} from "../../../src/interfaces/IBlockchain";
-import {CasperBlockchain} from "../../../src/lib/CasperBlockchain";
-import {BlockFetcher} from "../../../src/services/BlockFetcher";
-import {BlockParser} from "../../../src/services/BlockParser";
+import {IBlockchain} from '../../../src';
+import {CasperBlockchain} from '../../../src';
+import {BlockFetcher} from '../../../src';
+import {BlockParser} from '../../../src';
+import { settings } from '../../fixtures/settings';
 
 describe('BlockConsumer', async () => {
   let blockConsumer: IBlockConsumer;
 
   before(async () => {
-    const casperBlockchain: IBlockchain = new CasperBlockchain();
+    const casperBlockchain: IBlockchain = new CasperBlockchain(settings.blockchain.providerUrl as string);
     const blockFetcher: IBlockFetcher = new BlockFetcher(casperBlockchain);
     const blockParser: IBlockParser = new BlockParser();
     const datastore: IDataStore = new MockPostgresClient();

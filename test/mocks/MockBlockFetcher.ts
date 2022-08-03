@@ -1,5 +1,5 @@
-import { IBlockFetcher } from '../../src/interfaces/IBlockFetcher';
-import { BlockFetcherResult } from '../../src/types/services';
+import { IBlockFetcher } from '../../src';
+import { BlockFetcherResult } from '../../src';
 
 export class MockBlockFetcher implements IBlockFetcher {
   private blocks!: any[];

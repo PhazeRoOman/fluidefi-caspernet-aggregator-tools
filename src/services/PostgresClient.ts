@@ -1,22 +1,31 @@
 import { IDataStore } from '../interfaces';
 import { Client } from 'pg';
-import { settings } from '../config/settings';
-import { ReadQueryResult, WriteQueryResult } from '../types';
+import { PostgresConnectionOptions, ReadQueryResult, WriteQueryResult } from '../types';
 
 export class PostgresClient implements IDataStore {
-  private readClient!: Client;
-  private writeClient!: Client;
-  private readerInitialized: boolean = false;
-  private writerInitialized: boolean = false;
+  protected readClient!: Client;
+  protected writeClient!: Client;
+  protected readerInitialized: boolean = false;
+  protected writerInitialized: boolean = false;
 
-  constructor() {
-    this.readClient = new Client(settings.readOptions);
-    this.writeClient = new Client(settings.writeOptions);
+  constructor(writeOptions: PostgresConnectionOptions, readOptions: PostgresConnectionOptions | null = null) {
+    this.writeClient = new Client(writeOptions);
+
+    if (readOptions) {
+      this.readClient = new Client(readOptions);
+    } else {
+      this.readClient = this.writeClient;
+    }
   }
 
   async closeConnections(): Promise<void> {
-    await this.readClient.end();
     await this.writeClient.end();
+
+    try {
+      await this.readClient.end();
+    } catch (e) {
+      // if reader is writer
+    }
   }
 
   async read(query: string, values: any[]): Promise<ReadQueryResult> {

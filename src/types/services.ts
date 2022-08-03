@@ -35,3 +35,12 @@ export type WriteQueryResult = {
   error?: string;
   result?: any[];
 };
+
+export type PostgresConnectionOptions = {
+  host: string;
+  database: string;
+  user: string;
+  password: string;
+  port?: number;
+  ssl?: { rejectUnauthorized: boolean };
+};

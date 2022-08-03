@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { Blocks } from '../../../src/models/Blocks';
-import { MockPostgresClient } from '../../../test/mocks/MockPostgresClient';
+import { Blocks } from '../../../src';
+import { MockPostgresClient } from '../../mocks/MockPostgresClient';
 import { modelTestCases } from '../../fixtures/blocks'
-import {IDataStore} from "../../../src/interfaces/IDataStore";
+import {IDataStore} from '../../../src';
 import {createBlocksTableQuery, createProcessLogTableQuery} from "../../fixtures/queries";
 
 describe('Blocks', async () => {

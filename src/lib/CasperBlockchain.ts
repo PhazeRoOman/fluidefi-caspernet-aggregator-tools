@@ -1,13 +1,12 @@
 import { IBlockchain } from '../interfaces';
 import { GetBlockResult } from '../types';
 import { CasperServiceByJsonRPC } from 'casper-js-sdk';
-import { settings } from '../config/settings';
 
 export class CasperBlockchain implements IBlockchain {
   private client!: CasperServiceByJsonRPC;
 
-  constructor() {
-    this.client = new CasperServiceByJsonRPC(settings.blockchain.providerUrl as string);
+  constructor(providerUrl: string) {
+    this.client = new CasperServiceByJsonRPC(providerUrl);
   }
 
   async getBlockByHeight(height: number): Promise<GetBlockResult> {

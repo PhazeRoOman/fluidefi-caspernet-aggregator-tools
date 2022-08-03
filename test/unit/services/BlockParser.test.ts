@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { blocks } from '../../fixtures/blocks';
-import { BlockParser } from "../../../src/services/BlockParser";
+import { BlockParser } from '../../../src';
 
 describe('BlockParser', async () => {
   let blockParser: BlockParser;

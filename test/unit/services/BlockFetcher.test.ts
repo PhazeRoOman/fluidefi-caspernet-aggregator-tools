@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { BlockFetcher } from '../../../src/services/BlockFetcher';
-import { IBlockchain } from '../../../src/interfaces/IBlockchain';
+import { BlockFetcher } from '../../../src';
+import { IBlockchain } from '../../../src';
 import { MockCasperBlockchain } from '../../mocks/MockCasperBlockchain';
 import { blocks } from '../../fixtures/blocks';
 

@@ -3,7 +3,7 @@ import { IBlockFetcher } from '../interfaces';
 import { BlockFetcherResult } from '../types';
 
 export class BlockFetcher implements IBlockFetcher {
-  private blockchain!: IBlockchain;
+  protected blockchain!: IBlockchain;
 
   constructor(blockchain: IBlockchain) {
     this.blockchain = blockchain;

@@ -17,6 +17,7 @@ export {
   BlockParserResult,
   ReadQueryResult,
   WriteQueryResult,
+  PostgresConnectionOptions,
 } from './services';
 
 export { BlocksWorkerResult } from './workers';

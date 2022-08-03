@@ -1,5 +1,5 @@
-import { IBlockParser } from '../../src/interfaces/IBlockParser';
-import { BlockParserResult } from '../../src/types/services';
+import { IBlockParser } from '../../src';
+import { BlockParserResult } from '../../src';
 
 export class MockBlockParser implements IBlockParser {
   private parsedBlocks!: any[];

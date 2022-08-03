@@ -1,13 +1,14 @@
 import { expect } from 'chai';
-import { CasperBlockchain } from '../../../src/lib/CasperBlockchain';
-import { IBlockchain } from '../../../src/interfaces/IBlockchain';
+import { CasperBlockchain } from '../../../src';
+import { IBlockchain } from '../../../src';
+import { settings } from '../../fixtures/settings';
 
 describe('CasperBlockchain', async () => {
   let casperBlockchain: IBlockchain;
   let height: number | undefined;
 
   before(() => {
-    casperBlockchain = new CasperBlockchain();
+    casperBlockchain = new CasperBlockchain(settings.blockchain.providerUrl as string);
   });
 
   describe('#getCurrentBlockHeight', async () => {

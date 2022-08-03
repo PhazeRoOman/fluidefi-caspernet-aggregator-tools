@@ -8,7 +8,7 @@ export type ProcessLogFields = {
 };
 
 export class ProcessLog {
-  private datastore!: IDataStore;
+  protected datastore!: IDataStore;
 
   constructor(datastore: IDataStore) {
     this.datastore = datastore;

@@ -2,7 +2,7 @@
 
 ### Description
 
-Classes and types for Casper Network data aggregation tools.
+Classes and types that can be composed into systems for aggregating and storing AMM data produced by Casper Network.
 
 ### Installation
 
@@ -14,7 +14,33 @@ npm install fl-casper-tools
 
 ### Usage
 
-- todo
+Import (javascript):
+
+```javascript
+const { 
+  CasperBlockchain, 
+  BlockFetcher,
+  BlockParser,
+  Blocks,
+  PostgresClient,
+  BlockConsumer,
+} = require('fl-casper-tools');
+```
+
+Import (typescript):
+
+```javascript
+import { 
+  CasperBlockchain, 
+  BlockFetcher,
+  BlockParser,
+  Blocks,
+  PostgresClient,
+  BlockConsumer,
+} from 'fl-casper-tools';
+```
+
+CaperBlockchain is a very light wrapper for the casper-sdk, which will only contain methods necessary for the data aggregation processes.
 
 ### Contributing
 
@@ -138,3 +164,12 @@ git branch -d hotfix/hotfix_name
 ```
 
 Once merged, a new version of the package will be published to npm by admin.
+
+NOTE: Before each commit, check your code formatting and style with the following commands:
+
+```
+npm run lint
+npm run format
+```
+
+Be sure to fix lint errors before pushing.

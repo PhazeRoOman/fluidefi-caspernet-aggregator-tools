@@ -5,9 +5,9 @@ import { IBlockParser } from '../interfaces';
 import { IBlocks } from '../interfaces';
 
 export class BlockConsumer implements IBlockConsumer {
-  private blockParser!: IBlockParser;
-  private blockFetcher!: IBlockFetcher;
-  private blocks!: IBlocks;
+  protected blockParser!: IBlockParser;
+  protected blockFetcher!: IBlockFetcher;
+  protected blocks!: IBlocks;
 
   constructor(blockParser: IBlockParser, blockFetcher: IBlockFetcher, blocks: IBlocks) {
     this.blockParser = blockParser;

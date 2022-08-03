@@ -1,6 +1,6 @@
-import { IBlockchain } from '../../src/interfaces/IBlockchain';
-import { GetBlockResult } from '../../src/types/lib';
-import { settings } from '../../src/config/settings';
+import { IBlockchain } from '../../src';
+import { GetBlockResult } from '../../src';
+import { settings } from '../fixtures/settings';
 
 export class MockCasperBlockchain implements IBlockchain {
   private blocks!: any[];

@@ -1,4 +1,4 @@
-import { IBlockParser } from '../interfaces/IBlockParser';
+import { IBlockParser } from '../interfaces';
 import { BlockParserResult } from '../types';
 
 export class BlockParser implements IBlockParser {

@@ -3,7 +3,7 @@ import { IBlocks } from '../interfaces';
 import { CreateBlockResult, FindBlockResult } from '../types';
 
 export class Blocks implements IBlocks {
-  private datastore!: IDataStore;
+  protected datastore!: IDataStore;
 
   constructor(datastore: IDataStore) {
     this.datastore = datastore;

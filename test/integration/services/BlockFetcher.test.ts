@@ -1,13 +1,14 @@
 import { expect } from 'chai';
-import { BlockFetcher } from '../../../src/services/BlockFetcher';
-import { CasperBlockchain } from '../../../src/lib/CasperBlockchain';
-import { IBlockchain } from '../../../src/interfaces/IBlockchain';
+import { BlockFetcher } from '../../../src';
+import { CasperBlockchain } from '../../../src';
+import { IBlockchain } from '../../../src';
+import { settings } from '../../fixtures/settings';
 
 describe('BlockFetcher', async () => {
   let blockFetcher: BlockFetcher;
 
   before(async () => {
-    const casperBlockchain: IBlockchain = new CasperBlockchain();
+    const casperBlockchain: IBlockchain = new CasperBlockchain(settings.blockchain.providerUrl as string);
     blockFetcher = new BlockFetcher(casperBlockchain);
   });
 

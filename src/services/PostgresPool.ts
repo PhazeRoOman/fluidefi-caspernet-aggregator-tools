@@ -1,23 +1,31 @@
 import { IDataStore } from '../interfaces';
 import { Pool } from 'pg';
-import { settings } from '../config/settings';
 
-import { ReadQueryResult, WriteQueryResult } from '../types';
+import { PostgresConnectionOptions, ReadQueryResult, WriteQueryResult } from '../types';
 
 export class PostgresPool implements IDataStore {
-  private readPool!: Pool;
-  private writePool!: Pool;
+  protected readPool!: Pool;
+  protected writePool!: Pool;
 
-  constructor() {
-    this.readPool = new Pool({
-      ...settings.readOptions,
-      max: parseInt(settings.maxReadPoolConnections, 10),
-    });
-
+  constructor(
+    writeOptions: PostgresConnectionOptions,
+    readOptions: PostgresConnectionOptions | null = null,
+    maxWritePoolConnections: number = 10,
+    maxReadPoolConnections: number = 10,
+  ) {
     this.writePool = new Pool({
-      ...settings.writeOptions,
-      max: parseInt(settings.maxWritePoolConnections, 10),
+      ...writeOptions,
+      max: maxWritePoolConnections,
     });
+
+    if (readOptions) {
+      this.readPool = new Pool({
+        ...readOptions,
+        max: maxReadPoolConnections,
+      });
+    } else {
+      this.readPool = this.writePool;
+    }
   }
 
   async read(query: string, values: any[]): Promise<ReadQueryResult> {
