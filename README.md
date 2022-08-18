@@ -138,6 +138,14 @@ Similarly, you can define your own Blocks model, if you are not using an SQL-bas
 
 Note: A future release will allow for interoperability with inversify's dependency injection.
 
+### Docs
+
+Docs can be generated using typedoc and served locally via the docs directory.
+Follow the  [typedocs installation instructions](https://typedoc.org/guides/installation/), and then generate docs with:
+```
+typedoc --out docs src/index.ts
+```
+
 ### Contributing
 
 Developers must follow the [git-flow branching model](https://nvie.com/posts/a-successful-git-branching-model/) when contributing to this project and versioning must adhere to [Semantic Versioning](http://semver.org/).

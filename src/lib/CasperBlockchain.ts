@@ -15,7 +15,7 @@ export class CasperBlockchain implements IBlockchain {
 
     try {
       result = await this.client.getBlockInfoByHeight(height);
-    } catch (e) {
+    } catch (e: any) {
       error = `Request failed with error: ${e.toString()}`;
     }
 

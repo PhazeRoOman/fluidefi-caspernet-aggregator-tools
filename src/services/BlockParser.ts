@@ -25,7 +25,7 @@ export class BlockParser implements IBlockParser {
       };
 
       parserResult.success = true;
-    } catch (err) {
+    } catch (err: any) {
       // todo - log error
       // console.log(err);
       parserResult.error = err.toString();
