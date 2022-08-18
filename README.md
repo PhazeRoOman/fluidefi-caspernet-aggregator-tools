@@ -53,6 +53,10 @@ Simple example - get the current blockchain height:
 const height = await blockchain.getCurrentBlockHeight();
 ```
 
+The following example assumes you already have a postgres data source with the blocks table created, as per the schema in src/schema/...Raw Events.pdf.
+
+The `writeOptions` argument for the PostgresClient will be the same options used for a `node-pg` Client.
+
 Initialize other classes used for processing blocks:
 
 ```javascript
