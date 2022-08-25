@@ -2,12 +2,21 @@ import { IDataStore } from '../interfaces';
 import { Client } from 'pg';
 import { PostgresConnectionOptions, ReadQueryResult, WriteQueryResult } from '../types';
 
+/**
+ * The IDataStore implementation for using a postgres.  Uses node-pg Client.
+ */
 export class PostgresClient implements IDataStore {
   protected readClient!: Client;
   protected writeClient!: Client;
   protected readerInitialized: boolean = false;
   protected writerInitialized: boolean = false;
 
+  /**
+   * Constructor is passed config options that are the same as those used for pg.Client constructor:
+   * [pg.Client](https://node-postgres.com/api/client)
+   * @param writeOptions connection options for data store write instance - same as config for pg.Client constructor
+   * @param [readOptions] connection options for data store read instance - same as config for pg.Client constructor
+   */
   constructor(writeOptions: PostgresConnectionOptions, readOptions: PostgresConnectionOptions | null = null) {
     this.writeClient = new Client(writeOptions);
 
@@ -28,6 +37,11 @@ export class PostgresClient implements IDataStore {
     }
   }
 
+  /**
+   * Reads data from the postgres data store read instance, if it exists, otherwise the writer instance.
+   * @param query read query to execute on the data store
+   * @param values array of variables to substitute into the query, if required
+   */
   async read(query: string, values: any[]): Promise<ReadQueryResult> {
     if (!this.readerInitialized) {
       let error: any;
@@ -74,6 +88,11 @@ export class PostgresClient implements IDataStore {
     });
   }
 
+  /**
+   * Writes data to the postgres data store writer instance.
+   * @param query write query to execute on the data store
+   * @param values array of variables to substitute into the query, if required
+   */
   async write(query: string, values: any[]): Promise<WriteQueryResult> {
     if (!this.writerInitialized) {
       let error: any;

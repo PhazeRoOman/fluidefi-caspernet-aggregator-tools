@@ -2,6 +2,9 @@ import { IDataStore } from '../interfaces';
 import { IBlocks } from '../interfaces';
 import { CreateBlockResult, FindBlockResult } from '../types';
 
+/**
+ * The IBlocks implementation for storing Casper Network blocks in an SQL-based data store.
+ */
 export class Blocks implements IBlocks {
   protected datastore!: IDataStore;
 
@@ -9,6 +12,10 @@ export class Blocks implements IBlocks {
     this.datastore = datastore;
   }
 
+  /**
+   * Saves the block fields to the data store.
+   * @param fields block data in a format that is compatible with the IDataStore dependency
+   */
   async create(fields: any): Promise<CreateBlockResult> {
     const query = `
       insert into blocks (
@@ -55,6 +62,10 @@ export class Blocks implements IBlocks {
     };
   }
 
+  /**
+   * Finds and returns the block fields from the datastore for the given height.
+   * @param height height of desired block
+   */
   async findByHeight(height: number): Promise<FindBlockResult> {
     const query = `
       select * from blocks

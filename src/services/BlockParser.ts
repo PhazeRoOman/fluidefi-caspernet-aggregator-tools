@@ -1,7 +1,15 @@
 import { IBlockParser } from '../interfaces';
 import { BlockParserResult } from '../types';
 
+/**
+ * The IBlockParser implementation for preparing the block fields returned from a Casper Network node
+ * in an acceptable format to write to the SQL data store.
+ */
 export class BlockParser implements IBlockParser {
+  /**
+   * Parses the fields from the raw block into an object that can be written to the data store.
+   * @param block raw block fetched from the blockchain
+   */
   apply(block: any): BlockParserResult {
     const parserResult: BlockParserResult = { success: false };
 
@@ -26,8 +34,6 @@ export class BlockParser implements IBlockParser {
 
       parserResult.success = true;
     } catch (err: any) {
-      // todo - log error
-      // console.log(err);
       parserResult.error = err.toString();
       parserResult.success = false;
     }
