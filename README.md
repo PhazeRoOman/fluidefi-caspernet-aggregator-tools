@@ -141,7 +141,8 @@ Note: A future release will allow for interoperability with inversify's dependen
 ### Docs
 
 Docs can be generated using typedoc and served locally via the docs directory.
-Follow the  [typedocs installation instructions](https://typedoc.org/guides/installation/), and then generate docs with:
+`typedoc` is installed with the dev dependencies.
+Generate docs with:
 ```
 typedoc --out docs src/index.ts
 ```
