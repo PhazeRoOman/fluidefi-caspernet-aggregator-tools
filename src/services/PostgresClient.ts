@@ -61,7 +61,7 @@ export class PostgresClient implements IDataStore {
       if (!this.readerInitialized) {
         return {
           success: false,
-          error: `Could not connect to read client: ${error ? error.toString : undefined}`,
+          error: `Could not connect to read client: ${error ? error.toString() : undefined}`,
         };
       }
     }
@@ -112,7 +112,7 @@ export class PostgresClient implements IDataStore {
       if (!this.writerInitialized) {
         return {
           success: false,
-          error: `Could not connect to write client: ${error ? error.toString : undefined}`,
+          error: `Could not connect to write client: ${error ? error.toString() : undefined}`,
         };
       }
     }

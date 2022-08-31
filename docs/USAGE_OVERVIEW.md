@@ -159,7 +159,7 @@ import {
   IBlockFetcher,
   IBlockParser,
   IBlocks,
-  IPostgresClient,
+  IDataStore,
   BlockFetcherResult,
   BlockParserResult,
   CreateBlockResult,
@@ -174,6 +174,7 @@ const writeOptions: any = {
   'user': 'postgres_db_username',
   'password': 'postgres_db_password',
   'port': 5432,  // or port # you are using
+  // ssl: { rejectUnauthorized: false }, // may require this
 };
 
 // instantiate
@@ -181,7 +182,7 @@ const blockchain: IBlockchain = new CasperBlockchain(jsonRpcProviderUrl);
 const fetcher: IBlockFetcher = new BlockFetcher(blockchain);
 const parser: IBlockParser = new BlockParser();
 const datastore: IDataStore = new PostgresClient(writeOptions);
-const blocks: IBlockParser = new Blocks(datastore);
+const blocks: IBlocks = new Blocks(datastore);
 
 // execute in async scope
 (async () => {
@@ -189,12 +190,26 @@ const blocks: IBlockParser = new Blocks(datastore);
   
   // fetch the block
   const blockFetcherResult: BlockFetcherResult = await fetcher.apply(targetBlockHeight);
+  
+  // check for success
+  if(!blockFetcherResult.success) {
+    console.log('BlockFetcher was unsuccessful');
+    console.log(blockFetcherResult);
+    return;
+  }
 
   // if the block fetcher was successful, the 'block' field in the result will be defined
   const block: any = blockFetcherResult.block;
   
   // parse the fields from the raw block to match the format of the data store
   const parserResult: BlockParserResult = parser.apply(block);
+
+  // check for success
+  if(!parserResult.success) {
+    console.log('BlockParser was unsuccessful');
+    console.log(parserResult);
+    return;
+  }
   
   // if the block parser was successful, the 'fields' field of the result will be defined
   const fields: any = parserResult.fields;
@@ -205,6 +220,10 @@ const blocks: IBlockParser = new Blocks(datastore);
   // check that the block was saved successfully
   if(result.success) {
     console.log(`Block ${targetBlockHeight} was saved successfully!`);
+  } else {
+    console.log('Block  was unsuccessful');
+    console.log(`Block ${targetBlockHeight} was not saved successfully`);
+    return;
   }
 })()
   .catch((e) => {

@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## [0.1.0] - 2022-06-06
+## [0.1.2] - 2022-08-31
+### Fixed
+- error handling message in `PostgresClient`
 ### Added
-- initial project files
+- more documentation
 
 ## [0.1.1] - 2022-08-03
 ### Changed
 - classes to receive settings via constructor
+
+## [0.1.0] - 2022-06-06
+### Added
+- initial project files
