@@ -118,6 +118,44 @@ export const blocks = [
   }
 ];
 
+export const invalidBlocks = [
+  {
+    "number": 3,
+    "hash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+    "parentHash": "0x2302e1c0b972d00932deb5dab9eb2982f570597d9d42504c05d9c2147eaf9c88",
+    "baseFeePerGas": 58713056622,
+    "nonce": "0xfb6e1a62d119228b",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "transactionsRoot": "0x3a1b03875115b79539e5bd33fb00d8f7b7cd61929d5a3c574f507b8acf415bee",
+    "stateRoot": "0xf1133199d44695dfa8fd1bcfe424d82854b5cebef75bddd7e40ea94cda515bcb",
+    "miner": "0x8888f1f195afa192cfee860698584c030f4c9db1",
+    "difficulty": '21345678965432',
+    "totalDifficulty": '324567845321',
+    "size": 616,
+    "extraData": "0x",
+    "gasLimit": 3141592,
+    "gasUsed": 21662,
+    "timestamp": 1429287689,
+    "transactions": [
+      "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b"
+    ],
+    "uncles": []
+  },
+  {
+    api_version: '1.4.5',
+    block: {
+      hash: '1580080509d7f935683a886a594670b504c50ef22be07ac14f53e46c7a9f3723',
+      body: {
+        proposer: '01faa681d910a8ac877b81537d75db42395b9da0da1a3457d223151305f803da0e',
+        deploy_hashes: [],
+        transfer_hashes: []
+      }
+    }
+  },
+  {},
+];
+
 export const parsedBlocks = [
   {
     blockHash: '9af02a3ef41ef20cbf3fb7711223eda301ffe2a4bef0837cbddea53dbbea3ece',
@@ -126,10 +164,10 @@ export const parsedBlocks = [
     bodyHash: '12b20b81b31b5883734798c1eda8bb9474e5644c35d5ffe6c094b3793c99c872',
     randomBit: false,
     accumulatedSeed: '7f52c90454d0e02eda21efb1c5178b061e52b9cee654e284da439fe7aa4c3196',
-    eraEnd: null,
+    eraEnd: false,
     timestampUtc: '2022-05-16T21:06:53.568Z',
     eraId: 4924,
-    blockHeight: 785910,
+    blockNumber: 785910,
     protocolVersion: '1.4.5',
     proposer: '01c7de2f333695c4db43cce8c555f74540176071a9eeb8438eb335634b9729ee6b',
     deployHashes: [],
@@ -143,10 +181,10 @@ export const parsedBlocks = [
     bodyHash: '55e2b72a8dea0c7f1f6a250efc390f161b76d4b3f516ff1ac43eb9bbc9b5008c',
     randomBit: true,
     accumulatedSeed: 'af3d48806784800b306b5af903a6e4d1e0aaa91611e372f647b10ca5ad8a5681',
-    eraEnd: null,
+    eraEnd: false,
     timestampUtc: '2022-05-16T21:11:15.712Z',
     eraId: 4924,
-    blockHeight: 785911,
+    blockNumber: 785911,
     protocolVersion: '1.4.5',
     proposer: '01faa681d910a8ac877b81537d75db42395b9da0da1a3457d223151305f803da0e',
     deployHashes: [],
@@ -160,10 +198,10 @@ export const parsedBlocks = [
     bodyHash: '806dc47a748567d676c553ce9e2a8b789d5dfcba82e4686498c89b0ec8cbf6f3',
     randomBit: true,
     accumulatedSeed: '1830c760aacce89aa6949d6ddf26faf0c4b946bdf1e3fdbc56d789485a627ce9',
-    eraEnd: null,
+    eraEnd: false,
     timestampUtc: '2022-05-16T21:12:54.016Z',
     eraId: 4924,
-    blockHeight: 785912,
+    blockNumber: 785912,
     protocolVersion: '1.4.5',
     proposer: '01ba1d24932ec070d5c13440025dfa760688a9337c5ddac41654706508cb5ea5cd',
     deployHashes: [],
@@ -177,10 +215,10 @@ export const parsedBlocks = [
     bodyHash: 'c9e7263100fd7d61d5add4dee10997bccac2e1bb56f3e92deb2b4c9fcd89da5f',
     randomBit: true,
     accumulatedSeed: '7d2237afafe0d2d45cd6da5da6462ae0d344ad455afed33907fc4a63cb1ae3af',
-    eraEnd: null,
+    eraEnd: false,
     timestampUtc: '2022-05-16T21:13:59.552Z',
     eraId: 4924,
-    blockHeight: 785913,
+    blockNumber: 785913,
     protocolVersion: '1.4.5',
     proposer: '015fd964620f98e551065079e142840dac3fb25bd97a0d4722411cb439f9247d72',
     deployHashes: [],
@@ -194,16 +232,61 @@ export const parsedBlocks = [
     bodyHash: '55e2b72a8dea0c7f1f6a250efc390f161b76d4b3f516ff1ac43eb9bbc9b5008c',
     randomBit: false,
     accumulatedSeed: '220cfaf7641845facd45cf22423a5ac2a5f397732ea221df46be03a13cbe8562',
-    eraEnd: null,
+    eraEnd: false,
     timestampUtc: '2022-05-16T21:15:05.088Z',
     eraId: 4924,
-    blockHeight: 785914,
+    blockNumber: 785914,
     protocolVersion: '1.4.5',
     proposer: '01faa681d910a8ac877b81537d75db42395b9da0da1a3457d223151305f803da0e',
     deployHashes: [],
     transferHashes: [],
     apiVersion: '1.4.5',
   },
+];
+
+export const invalidParsedBlocks = [
+  {
+    deployHash: '9af02a3ef41ef20cbf3fb7711223eda301ffe2a4bef0837cbddea53dbbea3ece',
+    from: '08633f74ea689fa9e4c072fc9c4c0dac44796805aa4a6a1ff5231dfdab16bf95',
+    to: '8170ff6f6279c7b1642a58aba88b407963642bff52fb7193706301b7804c7ee8',
+    timestampUtc: '2022-05-16T21:06:53.568Z',
+    value: 4924,
+    blockHeight: 785910,
+  },
+  {
+    blockHash: 'ffac8a8920770a30558fa775201eefc83fee7214926094b653eb1d50d457bde2',
+    parentHash: '7ec70856a9fe7bf6e5fae093926ca02e2aece7c4e9187f3734a2fed6533f1af1',
+    stateRootHash: '728ce839d8814d77c0d41f02f7664cfca6fe3c000bab012c0f38b04c7a64bb65',
+    bodyHash: '806dc47a748567d676c553ce9e2a8b789d5dfcba82e4686498c89b0ec8cbf6f3',
+    randomBit: true,
+    accumulatedSeed: '1830c760aacce89aa6949d6ddf26faf0c4b946bdf1e3fdbc56d789485a627ce9',
+    eraEnd: null,
+    timestampUtc: '2022-05-16T21:12:54.016Z',
+    eraId: 4924,
+    blockNumber: 785912,
+    protocolVersion: '1.4.5',
+    proposer: '01ba1d24932ec070d5c13440025dfa760688a9337c5ddac41654706508cb5ea5cd',
+    deployHashes: [],
+    transferHashes: [],
+    apiVersions: '1.4.5',
+  },
+  {
+    blockHash: '8848e2a1ede064289972bb8cf48cd5fa8d9356ed43c301844bd3c5b2e19c03dc',
+    parentHash: '426c9a8010f5060d6078f6ab0e00cfb522bf3f6b1043eaf4d05530fbe40e1934',
+    stateRootHash: '728ce839d8814d77c0d41f02f7664cfca6fe3c000bab012c0f38b04c7a64bb65',
+    bodyHash: 'c9e7263100fd7d61d5add4dee10997bccac2e1bb56f3e92deb2b4c9fcd89da5f',
+    randomBit: true,
+    accumulatedSeed: '7d2237afafe0d2d45cd6da5da6462ae0d344ad455afed33907fc4a63cb1ae3af',
+    eraEnd: null,
+    timestampUtc: '2022-05-16T21:13:59.552Z',
+    eraId: 4924,
+    blockNumber: 785913,
+    protocolVersion: '1.4.5',
+    proposer: '015fd964620f98e551065079e142840dac3fb25bd97a0d4722411cb439f9247d72',
+    deployHashes: [],
+    transferHashes: [],
+  },
+  {},
 ];
 
 export const modelTestCases = [
@@ -217,7 +300,7 @@ export const modelTestCases = [
     eraEnd: blocks[0].block.header.era_end,
     timestampUtc: blocks[0].block.header.timestamp,
     eraId: blocks[0].block.header.era_id,
-    blockHeight: blocks[0].block.header.height,
+    blockNumber: blocks[0].block.header.height,
     protocolVersion: blocks[0].block.header.protocol_version,
     proposer: blocks[0].block.body.proposer,
     deployHashes: blocks[0].block.body.deploy_hashes,
@@ -233,7 +316,7 @@ export const modelTestCases = [
     eraEnd: blocks[0].block.header.era_end,
     timestampUtc: blocks[0].block.header.timestamp,
     eraId: blocks[0].block.header.era_id,
-    blockHeight: blocks[0].block.header.height,
+    blockNumber: blocks[0].block.header.height,
     protocolVersion: blocks[0].block.header.protocol_version,
     proposer: blocks[0].block.body.proposer,
     deployHashes: blocks[0].block.body.deploy_hashes,
@@ -248,11 +331,29 @@ export const modelTestCases = [
     eraEnd: blocks[1].block.header.era_end,
     timestampUtc: blocks[1].block.header.timestamp,
     eraId: blocks[1].block.header.era_id,
-    blockHeight: blocks[1].block.header.height,
+    blockNumber: blocks[1].block.header.height,
     protocolVersion: blocks[1].block.header.protocol_version,
     proposer: blocks[1].block.body.proposer,
     deployHashes: blocks[1].block.body.deploy_hashes,
     transferHashes: blocks[1].block.body.transfer_hashes,
     apiVersion: blocks[1].api_version
   }
+];
+
+export const blockEntityFields: string[] = [
+  'blockHash',
+  'parentHash',
+  'stateRootHash',
+  'bodyHash',
+  'randomBit',
+  'accumulatedSeed',
+  'eraEnd',
+  'timestampUtc',
+  'eraId',
+  'blockNumber',
+  'protocolVersion',
+  'proposer',
+  'deployHashes',
+  'transferHashes',
+  'apiVersion',
 ];

@@ -1,5 +1,4 @@
-export { BlockConsumer } from './BlockConsumer';
-export { BlockFetcher } from './BlockFetcher';
-export { BlockParser } from './BlockParser';
-export { PostgresClient } from './PostgresClient';
-export { PostgresPool } from './PostgresPool';
+export { BlockConsumer } from './consumers/BlockConsumer';
+export { BlockSaver } from './datastore/BlockSaver';
+export { BlockFetcher } from './fetchers/BlockFetcher';
+export { BlockParser } from './parsers/BlockParser';

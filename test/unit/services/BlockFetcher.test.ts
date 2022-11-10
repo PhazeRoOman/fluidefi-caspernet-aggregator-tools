@@ -9,7 +9,7 @@ describe('BlockFetcher', async () => {
 
   before(async () => {
     const blockchain: IBlockchain = new MockCasperBlockchain();
-    (<MockCasperBlockchain>blockchain).injectBlocks(blocks);
+    (blockchain as MockCasperBlockchain).injectBlocks(blocks);
     blockFetcher = new BlockFetcher(blockchain);
   });
 

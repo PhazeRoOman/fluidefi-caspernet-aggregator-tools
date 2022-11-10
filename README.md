@@ -30,21 +30,21 @@ const {
   CasperBlockchain, 
   BlockFetcher,
   BlockParser,
-  Blocks,
-  PostgresClient,
+  DataStore,
+  BlockSaver,
   BlockConsumer,
 } = require('fl-casper-tools');
 ```
 
 Import (typescript):
 
-```javascript
+```typescript
 import { 
   CasperBlockchain, 
   BlockFetcher,
   BlockParser,
-  Blocks,
-  PostgresClient,
+  DataStore,
+  BlockSaver,
   BlockConsumer,
 } from 'fl-casper-tools';
 ```
@@ -69,37 +69,42 @@ The use the examples you will need to have a postgres database set up with the b
 The blocks table can be created with the following SQL code:
 
 ```
-CREATE TABLE IF NOT EXISTS public.blocks
-(
-    block_hash character varying(64) NOT NULL,
-    parent_hash character varying(64),
-    state_root_hash character varying(64),
-    body_hash character varying(64),
-    random_bit boolean,
-    accumulated_seed character varying(64),
-    era_end boolean,
-    timestamp_utc timestamp with time zone,
-    era_id integer,
-    block_height integer NOT NULL,
-    protocol_version character varying(20),
-    proposer character varying(68),
-    deploy_hashes character varying(64)[],
-    transfer_hashes character varying(64)[],
-    api_version character varying(20),
-    CONSTRAINT pk_blocks_id PRIMARY KEY (block_height)
-)
+CREATE TABLE IF NOT EXISTS blocks (
+    block_hash          varchar(64)      NOT NULL,
+    parent_hash         varchar(64)     ,
+    state_root_hash     varchar(64)     ,
+    body_hash           varchar(64)     ,
+    random_bit          boolean         ,
+    accumulated_seed    varchar(64)     ,
+    era_end             boolean         ,
+    timestamp_utc       timestamptz     ,
+    era_id              integer         ,
+    block_number        integer         ,
+    protocol_version    varchar(20)     ,
+    proposer            varchar(68)     ,
+    deploy_hashes       varchar(64)[]   ,
+    transfer_hashes     varchar(64)[]   ,
+    api_version         varchar(20)     ,
+    CONSTRAINT pk_blocks PRIMARY KEY ( block_number )
+);
 ```
-
-The `writeOptions` argument for the PostgresClient will be the same options used for a `node-pg` Client.
 
 Initialize other classes used for processing blocks:
 
 ```javascript
 const fetcher = new BlockFetcher(blockchain);
 const parser = new BlockParser();
-const datastore = new PostgresClient(writeOptions);
-const blocks = new Blocks(datastore);
+const datastore = new DataStore(getDataSource(dataSourceOptions));
+const blockSaver = new BlockSaver(datastore);
 ```
+
+Initialize the typeorm DataSource:
+
+```javascript
+await datastore.initialize();
+```
+
+The dataSourceOptions arg will be typeorm [DataSourceOption](https://typeorm.io/data-source-options/): 
 
 You can now fetch a block, parse it and add to your data store:
 
@@ -112,7 +117,8 @@ The result will have the following fields:
 ```typescript
 type BlockFetcherResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
   block?: any;
 };
@@ -132,7 +138,8 @@ The result will have the following fields, similar to the BlockFetcherResult:
 ```typescript
 type BlockParserResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
   fields?: any;
 };
@@ -142,7 +149,7 @@ If the parser was successful, save the block to the datastore using the blocks m
 
 ```javascript
 const fields = parserResult.fields;
-const result = await blocks.create(fields);
+const result = await blockSaver.apply(fields);
 ```
 
 The full process can be abstracted by using the BlockConsumer:
@@ -151,7 +158,7 @@ The full process can be abstracted by using the BlockConsumer:
 const blockConsumer = new BlockConsumer(
   parser,
   fetcher,
-  blocks
+  blockSaver
 );
 
 const blockConsumerResult = await blockConsumer.apply(700000);
@@ -162,16 +169,13 @@ The result will have the following fields:
 ```typescript
 type BlockConsumerResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
 };
 ```
 
-You can define your own data store to pass to the Blocks model constructor, if you aren't using postgres. It just needs to implement the IDataStore interface.
-
-Similarly, you can define your own Blocks model, if you are not using an SQL-based data store. It just needs to implement the IBlocks interface.
-
-Note: A future release will allow for interoperability with inversify's dependency injection.
+You can define your own data store to pass to the Blocks model constructor, if you don't want to use typeorm. It just needs to implement the IDataStore interface.
 
 ### Testing:
 

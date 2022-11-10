@@ -15,13 +15,12 @@ export class MockBlockParser implements IBlockParser {
   }
 
   findParsedFieldsByHeight(height: number): any | undefined {
-    for(let i = 0; i < this.parsedBlocks.length; i++) {
-      const block = this.parsedBlocks[i];
-      if(block.blockHeight === height) {
+    for (const block of this.parsedBlocks) {
+      if (block.blockNumber === height) {
         return block;
       }
     }
-
+  
     return undefined;
   }
 
@@ -32,7 +31,7 @@ export class MockBlockParser implements IBlockParser {
 
       return {
         success: !!parsedFields,
-        height: height,
+        height,
         fields: parsedFields
       };
     }

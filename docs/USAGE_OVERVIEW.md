@@ -19,8 +19,6 @@ An application using this library would perform ETL operations, on historical an
   - Updates to liquidity pool reserves / asset pricing
   - Other operations for DeFi platforms deployed to Caspernet
 
-### Blocks
-
 The general flow for aggregating block data uses the following interfaces:
 
 #### IBlockchain
@@ -33,7 +31,8 @@ Has IBlockchain as a dependency, with which it uses to fetch a desired block by 
 ```typescript
 type BlockFetcherResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
   block?: any;
 };
@@ -45,26 +44,28 @@ Will parse and format the raw block returned from the blockchain and return an o
 ```typescript
 type BlockParserResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
   fields?: any;
 };
 ```
 
-#### IBlocks
+#### IBlockSaver
 
-Model interface for finding and saving blocks to the data store. The implementation included in the library is specifically for SQL-based data stores. An implementation could easily be defined for another type of data store. It could then be used instead of the included Blocks class, so long as it implements the IBlocks interface.  Returns the following result when saving a block with the `create()` method:
+Will save a new Block Entity to the data store.  Returns the following result:
 ```typescript
-type CreateBlockResult = {
+type SaveBlockResult = {
   success: boolean;
+  error?: any;
+  message?: string;
   height?: number;
-  error?: string;
 };
 ```
 
 #### IDataStore
 
-This is an interface for the data store, which has an implementation in the library which is a wrapper for the node-pg client. An alternative implementation could be defined for any SQL-based database, and it would still work with the existing models in the library.  The IDataStore may not even be required, depending on how the IBlocks is implemented.
+This is an interface for the data store, which has an implementation in the library which is a wrapper for the typeorm DataSource. It's main purpose is to initialize the DataSource, and retrieve Repositories for the supported Entities.
 
 #### Return values
 
@@ -80,34 +81,47 @@ An example of how all the implementation classes are used together for a single 
 // ==================
 
 // import classes
-const { 
-  CasperBlockchain, 
+const {
+  CasperBlockchain,
   BlockFetcher,
   BlockParser,
-  Blocks,
-  PostgresClient,
+  DataStore,
+  BlockSaver,
 } = require('fl-casper-tools');
 
 const jsonRpcProviderUrl = 'rpc_endpoint_fpr_your_node';
 
-// define the postgres connection config options for your database
-const writeOptions = {
-  'host': 'postgres_db_hostname',
-  'database': 'postgres_db_database_name',
-  'user': 'postgres_db_username',
-  'password': 'postgres_db_password',
-  'port': 5432,  // or port # you are using
-};
+// define the typeorm connection config options for your data source
+const dataSourceOptions = {
+  type: 'postgres',
+  host: 'postgres_db_hostname',
+  port: 5432,  // or port # you are using
+  username: 'postgres_db_username',
+  password: 'postgres_db_password',
+  database: 'postgres_db_database_name',
+  synchronize: false,
+  logging: false,
+  entities: [
+    Block,
+    ProcessLog,
+  ],
+  migrations: [],
+  subscribers: [],
+  extra: { max: maxPoolConnections },
+}
 
 // instantiate
 const blockchain = new CasperBlockchain(jsonRpcProviderUrl);
 const fetcher = new BlockFetcher(blockchain);
 const parser = new BlockParser();
-const datastore = new PostgresClient(writeOptions);
-const blocks = new Blocks(datastore);
+const datastore = new DataStore(getDataSource(dataSourceOptions));
+const blockSaver = new BlockSaver(datastore);
 
 // execute in async scope
 (async () => {
+  // Initialize the typeorm DataSource:
+  await datastore.initialize();
+
   const targetBlockHeight = 700000;
   
   // fetch the block
@@ -123,7 +137,7 @@ const blocks = new Blocks(datastore);
   const fields = parserResult.fields;
   
   // save the block to the data store
-  const result = await blocks.create(fields);
+  const result = await blockSaver.apply(fields);
   
   // check that the block was saved successfully
   if(result.success) {
@@ -141,7 +155,7 @@ Notes on the above:
 - Any of the classes instantiated could be replaced by a user-defined implementation that respects the interface, for example:
 ```javascript
 const parser = new MyBlockParser();
-const blocks = new MyMongoDbBlocks();
+const blockSaver = new MyMongoBlockSaver();
 ```
 
 ```typescript
@@ -153,39 +167,51 @@ import {
   CasperBlockchain,
   BlockFetcher,
   BlockParser,
-  Blocks,
-  PostgresClient,
+  DataStore,
+  BlockSaver,
   IBlockchain,
   IBlockFetcher,
   IBlockParser,
-  IBlocks,
+  IBlockSaver,
   IDataStore,
   BlockFetcherResult,
   BlockParserResult,
-  CreateBlockResult,
+  SaveBlockResult,
 } from 'fl-casper-tools';
 
 const jsonRpcProviderUrl: string = 'rpc_endpoint_fpr_your_node';
 
-// define the postgres connection config options for your database
-const writeOptions: any = {
-  'host': 'postgres_db_hostname',
-  'database': 'postgres_db_database_name',
-  'user': 'postgres_db_username',
-  'password': 'postgres_db_password',
-  'port': 5432,  // or port # you are using
-  // ssl: { rejectUnauthorized: false }, // may require this
-};
+// define the typeorm connection config options for your data source
+const dataSourceOptions = {
+  type: 'postgres',
+  host: 'postgres_db_hostname',
+  port: 5432,  // or port # you are using
+  username: 'postgres_db_username',
+  password: 'postgres_db_password',
+  database: 'postgres_db_database_name',
+  synchronize: false,
+  logging: false,
+  entities: [
+    Block,
+    ProcessLog,
+  ],
+  migrations: [],
+  subscribers: [],
+  extra: { max: maxPoolConnections },
+}
 
 // instantiate
 const blockchain: IBlockchain = new CasperBlockchain(jsonRpcProviderUrl);
 const fetcher: IBlockFetcher = new BlockFetcher(blockchain);
 const parser: IBlockParser = new BlockParser();
-const datastore: IDataStore = new PostgresClient(writeOptions);
-const blocks: IBlocks = new Blocks(datastore);
+const datastore: IDataStore = new DataStore(getDataSource(dataSourceOptions));
+const blockSaver: IBlockSaver = new BlockSaver(datastore);
 
 // execute in async scope
 (async () => {
+  // Initialize the typeorm DataSource:
+  await datastore.initialize();
+  
   const targetBlockHeight: number = 700000;
   
   // fetch the block
@@ -215,7 +241,7 @@ const blocks: IBlocks = new Blocks(datastore);
   const fields: any = parserResult.fields;
   
   // save the block to the data store
-  const result: CreateBlockResult = await blocks.create(fields);
+  const result: SaveBlockResult = await blockSaver.apply(fields);
   
   // check that the block was saved successfully
   if(result.success) {
@@ -238,7 +264,8 @@ Returns the following result:
 ```typescript
 type BlockConsumerResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
 };
 ```
@@ -247,35 +274,48 @@ An example using the IBlockConsumer in javascript would look like:
 
 ```javascript
 // import classes
-const { 
-  CasperBlockchain, 
+const {
+  CasperBlockchain,
   BlockFetcher,
   BlockParser,
-  Blocks,
-  PostgresClient,
+  DataStore,
+  BlockSaver,
   BlockConsumer,
 } = require('fl-casper-tools');
 
 const jsonRpcProviderUrl = 'rpc_endpoint_fpr_your_node';
 
-// define the postgres connection config options for your database
-const writeOptions = {
-  'host': 'postgres_db_hostname',
-  'database': 'postgres_db_database_name',
-  'user': 'postgres_db_username',
-  'password': 'postgres_db_password',
-  'port': 5432,  // or port # you are using
-};
+// define the typeorm connection config options for your data source
+const dataSourceOptions = {
+  type: 'postgres',
+  host: 'postgres_db_hostname',
+  port: 5432,  // or port # you are using
+  username: 'postgres_db_username',
+  password: 'postgres_db_password',
+  database: 'postgres_db_database_name',
+  synchronize: false,
+  logging: false,
+  entities: [
+    Block,
+    ProcessLog,
+  ],
+  migrations: [],
+  subscribers: [],
+  extra: { max: maxPoolConnections },
+}
 
 // instantiate
 const blockConsumer = new BlockConsumer(
   new BlockParser(),
   new BlockFetcher(new CasperBlockchain(jsonRpcProviderUrl)),
-  new Blocks(new PostgresClient(writeOptions))
+  new BlockSaver(new DataStore(getDataSource(dataSourceOptions)))
 );
 
 // execute in async scope
 (async () => {
+  // Initialize the typeorm DataSource:
+  await datastore.initialize();
+  
   const targetBlockHeight = 700000;
   
   // apply the block consumer to the target height

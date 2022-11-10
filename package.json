@@ -1,6 +1,6 @@
 {
   "name": "fl-casper-tools",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Tools for aggregating Casper Network AMM data",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,6 +39,7 @@
     "dotenv": "^16.0.1",
     "eventsource": "^2.0.1",
     "pg": "^8.7.3",
+    "typeorm": "^0.3.10",
     "winston": "^3.7.2"
   },
   "devDependencies": {

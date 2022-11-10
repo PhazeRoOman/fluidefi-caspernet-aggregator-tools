@@ -1,7 +1,10 @@
-export { IBlockchain } from './IBlockchain';
-export { IBlockConsumer } from './IBlockConsumer';
-export { IBlockFetcher } from './IBlockFetcher';
-export { IBlockParser } from './IBlockParser';
-export { IBlocks } from './IBlocks';
-export { IBlocksWorker } from './IBlocksWorker';
-export { IDataStore } from './IDataStore';
+export { IBlockConsumer } from './consumers/IBlockConsumer';
+export { IBlockSaver } from './datastore/IBlockSaver';
+export { IDataStore } from './datastore/IDataStore';
+export { IRepository } from './datastore/IRepository';
+export { IBlockFetcher } from './fetchers/IBlockFetcher';
+export { IAlerts } from './lib/IAlerts';
+export { IBlockchain } from './lib/IBlockchain';
+export { IBlocksWorker } from './lib/IBlocksWorker';
+export { ILogger } from './lib/ILogger';
+export { IBlockParser } from './parsers/IBlockParser';

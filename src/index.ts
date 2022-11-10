@@ -1,43 +1,46 @@
 export {
-  IBlockchain,
+  getDataSource,
+} from './config';
+
+export {
+  Block,
+  ProcessLog,
+} from './entities';
+
+export {
   IBlockConsumer,
-  IBlockFetcher,
-  IBlockParser,
-  IBlocks,
-  IBlocksWorker,
+  IBlockSaver,
   IDataStore,
+  IRepository,
+  IBlockFetcher,
+  IAlerts,
+  IBlockchain,
+  IBlocksWorker,
+  ILogger,
+  IBlockParser,
 } from './interfaces';
 
 export {
   CasperBlockchain,
+  ConsoleLogger,
+  Loggable,
+  RepositoryWrapper,
+  DataStore,
 } from './lib';
-
-export {
-  Blocks,
-  ProcessLog,
-} from './models';
 
 export {
   BlockConsumer,
   BlockFetcher,
   BlockParser,
-  PostgresClient,
-  PostgresPool,
+  BlockSaver,
 } from './services';
 
 export {
   CasperBlockFields,
   GetBlockResult,
-  CreateBlockResult,
-  FindBlockResult,
-  CreateProcessLogResult,
-  UpdateProcessLogResult,
-  FindProcessLogResult,
   BlockConsumerResult,
   SaveBlockResult,
   BlockFetcherResult,
   BlockParserResult,
-  ReadQueryResult,
-  WriteQueryResult,
   BlocksWorkerResult,
 } from './types';

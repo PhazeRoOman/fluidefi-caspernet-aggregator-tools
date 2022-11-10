@@ -14,6 +14,7 @@ describe('CasperBlockchain', async () => {
   describe('#getCurrentBlockHeight', async () => {
     it('should fetch the current block height', async () => {
       height = await casperBlockchain.getCurrentBlockHeight();
+      // tslint:disable-next-line:no-console
       console.log('Current height: ' + height);
       expect(!!height).to.eql(true);
       expect((height || 0) > 0).to.eql(true);

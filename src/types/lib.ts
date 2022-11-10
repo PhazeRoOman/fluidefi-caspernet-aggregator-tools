@@ -1,6 +1,7 @@
 export type GetBlockResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
   height?: number;
   block?: any;
 };

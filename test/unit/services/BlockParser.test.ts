@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import { blocks } from '../../fixtures/blocks';
+import {blockEntityFields, blocks, invalidBlocks} from '../../fixtures/blocks';
 import { BlockParser } from '../../../src';
+import {areFieldsValid} from "../../fixtures/helpers";
 
 describe('BlockParser', async () => {
   let blockParser: BlockParser;
@@ -25,20 +26,24 @@ describe('BlockParser', async () => {
         expect(!!result.fields.eraEnd).to.eql(!!block.block.header.era_end);
         expect(result.fields.timestampUtc).to.eql(block.block.header.timestamp);
         expect(result.fields.eraId).to.eql(block.block.header.era_id);
-        expect(result.fields.blockHeight).to.eql(block.block.header.height);
+        expect(result.fields.blockNumber).to.eql(block.block.header.height);
         expect(result.fields.protocolVersion).to.eql(block.block.header.protocol_version);
         expect(result.fields.proposer).to.eql(block.block.body.proposer);
         expect(result.fields.deployHashes).to.eql(block.block.body.deploy_hashes);
         expect(result.fields.transferHashes).to.eql(block.block.body.transfer_hashes);
+        expect(areFieldsValid(result.fields, blockEntityFields)).to.eql(true);
       });
-    })
-
-    it('should return error while parsing missing data', async () => {
-      const result = await blockParser.apply({});
-      expect(!!result).to.eql(true);
-      expect(!!result.success).to.eql(false);
-      expect(!!result.fields).to.eql(false);
-      expect(!!result.error).to.eql(true);
+    });
+  
+    invalidBlocks.forEach((block) => {
+      it('should return error while parsing invalid data', async () => {
+        const result = await blockParser.apply(block);
+        expect(!!result).to.eql(true);
+        expect(!!result.success).to.eql(false);
+        expect(!!result.fields).to.eql(false);
+        expect(!!result.error).to.eql(true);
+        expect(areFieldsValid(result.fields, blockEntityFields)).to.eql(false);
+      });
     });
   });
 });

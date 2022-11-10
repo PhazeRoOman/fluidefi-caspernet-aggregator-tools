@@ -111,25 +111,25 @@ You are now ready to import classes, types and interfaces from the library:
 Import (javascript):
 
 ```javascript
-const { 
-  CasperBlockchain, 
-  BlockFetcher,
-  BlockParser,
-  Blocks,
-  PostgresClient,
-  BlockConsumer,
+const {
+    CasperBlockchain,
+    BlockFetcher,
+    BlockParser,
+    DataStore,
+    BlockSaver,
+    BlockConsumer,
 } = require('fl-casper-tools');
 ```
 
 Import (typescript):
 
-```javascript
-import { 
-  CasperBlockchain, 
-  BlockFetcher,
-  BlockParser,
-  Blocks,
-  PostgresClient,
-  BlockConsumer,
+```typescript
+import {
+    CasperBlockchain,
+    BlockFetcher,
+    BlockParser,
+    DataStore,
+    BlockSaver,
+    BlockConsumer,
 } from 'fl-casper-tools';
 ```

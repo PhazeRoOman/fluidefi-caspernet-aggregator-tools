@@ -1,4 +1,5 @@
 export type BlocksWorkerResult = {
   success: boolean;
-  error?: string;
+  error?: any;
+  message?: string;
 };

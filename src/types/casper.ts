@@ -1,16 +1,17 @@
 export type CasperBlockFields = {
-  blockHash: number;
+  blockHash: string;
   parentHash: string;
   stateRootHash: string;
   bodyHash: string;
-  randomBit: string;
+  randomBit: boolean;
   accumulatedSeed: string;
-  eraEnd: string;
-  timestampUtc: string;
-  eraId: string;
-  blockHeight: string;
+  eraEnd: boolean;
+  timestampUtc: Date | string;
+  eraId: number;
+  blockNumber: number;
   protocolVersion: string;
   proposer: string;
-  deployHashes: string;
-  transferHashes: string;
+  deployHashes: string[];
+  transferHashes: string[];
+  apiVersion: string;
 };

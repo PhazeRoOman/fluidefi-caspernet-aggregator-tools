@@ -60,20 +60,18 @@ export class MockCasperBlockchain implements IBlockchain {
   async getBlockByHeight(height: number): Promise<GetBlockResult> {
     if(this.getSuccess('getBlockByHeight')) {
       if(!!this.blocks) {
-        for(let i = 0; i < this.blocks.length; i++) {
-          const block = this.blocks[i];
-
-          if(!!block && !!block.block && !!block.block.header && !!block.block.header.height) {
+        for (const block of this.blocks) {
+          if (!!block && !!block.block && !!block.block.header && !!block.block.header.height) {
             const blockHeight = block.block.header.height;
 
-            if(parseInt(blockHeight) === height) {
-              return { success: true, block: block, height: height }
+            if(parseInt(blockHeight, 10) === height) {
+              return { success: true, block, height }
             }
           }
         }
       }
 
-      return { success: false, error: 'Block not found', height: height }
+      return { success: false, error: 'Block not found', height }
     }
 
     return { success: false }
@@ -104,8 +102,8 @@ export class MockCasperBlockchainV2 extends MockCasperBlockchain {
   async getCurrentBlockHeight(): Promise<number | undefined> {
     if(this.enabled) {
       const currentBlockHeight = await super.getCurrentBlockHeight();
-      const confirmations = parseInt(settings.blockchain.blockchainConfirmations);
-      return <number>(currentBlockHeight) + confirmations;
+      const confirmations = parseInt(settings.blockchain.blockchainConfirmations, 10);
+      return ((currentBlockHeight) as number) + confirmations;
     }
 
     return undefined;

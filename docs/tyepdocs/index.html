@@ -1,0 +1,129 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>fl-casper-tools</title><meta name="description" content="Documentation for fl-casper-tools"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">fl-casper-tools</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>fl-casper-tools </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#fluidefi-caspernet-aggregator-tools" id="fluidefi-caspernet-aggregator-tools" style="color: inherit; text-decoration: none;">
+  <h2>FLUIDEFI Caspernet Aggregator Tools</h2>
+</a>
+<p>This repository contains a library of tools that can be composed together into a data-aggregation app, with the goal of storing all desired caspernet raw and decoded DeFi data in an efficient data store.</p>
+<p>An application using this library would perform ETL operations, on historical and new blockchain data as it is produced.  The types of data extracted and decoded will include:</p>
+<ul>
+<li>Block data (including header and body)</li>
+<li>Deploys (raw)</li>
+<li>DeFi data (decoded from state changes in deploys):<ul>
+<li>Token approvals</li>
+<li>Token transfers</li>
+<li>Minting / burning of liquidity</li>
+<li>Updates to liquidity pool reserves / asset pricing</li>
+<li>Other operations for DeFi platforms deployed to Caspernet</li>
+</ul>
+</li>
+</ul>
+
+<a href="#quickstart" id="quickstart" style="color: inherit; text-decoration: none;">
+  <h3>Quickstart</h3>
+</a>
+<p>Install the package with:</p>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> </span><span class="hl-0">fl</span><span class="hl-1">-</span><span class="hl-0">casper</span><span class="hl-1">-</span><span class="hl-0">tools</span>
+</code></pre>
+<p>and import into your project with the following code:</p>
+<p>Import (javascript):</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> { </span><br/><span class="hl-1">  </span><span class="hl-3">CasperBlockchain</span><span class="hl-1">, </span><br/><span class="hl-1">  </span><span class="hl-3">BlockFetcher</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-3">BlockParser</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-3">Blocks</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-3">PostgresClient</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-3">BlockConsumer</span><span class="hl-1">,</span><br/><span class="hl-1">} = </span><span class="hl-4">require</span><span class="hl-1">(</span><span class="hl-5">&#39;fl-casper-tools&#39;</span><span class="hl-1">);</span>
+</code></pre>
+<p>Import (typescript):</p>
+<pre><code class="language-javascript"><span class="hl-6">import</span><span class="hl-1"> { </span><br/><span class="hl-1">  </span><span class="hl-0">CasperBlockchain</span><span class="hl-1">, </span><br/><span class="hl-1">  </span><span class="hl-0">BlockFetcher</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">BlockParser</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">Blocks</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">PostgresClient</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">BlockConsumer</span><span class="hl-1">,</span><br/><span class="hl-1">} </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-5">&#39;fl-casper-tools&#39;</span><span class="hl-1">;</span>
+</code></pre>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<p>CasperBlockchain is a very light wrapper for the casper-sdk, which will only contain methods necessary for the data aggregation processes.</p>
+<p>Create an instance by passing your JSON-RPC url to the constructor.  This should point to port 7777/rpc on your node server.</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">blockchain</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">CasperBlockchain</span><span class="hl-1">(</span><span class="hl-0">jsonRpcProviderUrl</span><span class="hl-1">);</span>
+</code></pre>
+<p>Simple example - get the current blockchain height:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">height</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">blockchain</span><span class="hl-1">.</span><span class="hl-4">getCurrentBlockHeight</span><span class="hl-1">();</span>
+</code></pre>
+<p>The use the examples you will need to have a postgres database set up with the blocks table created.</p>
+<p>The blocks table can be created with the following SQL code:</p>
+<pre><code><span class="hl-3">CREATE</span><span class="hl-1"> </span><span class="hl-3">TABLE</span><span class="hl-1"> </span><span class="hl-3">IF</span><span class="hl-1"> </span><span class="hl-3">NOT</span><span class="hl-1"> </span><span class="hl-3">EXISTS</span><span class="hl-1"> </span><span class="hl-0">public</span><span class="hl-1">.</span><span class="hl-0">blocks</span><br/><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-0">block_hash</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">) </span><span class="hl-3">NOT</span><span class="hl-1"> </span><span class="hl-3">NULL</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">parent_hash</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">state_root_hash</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">body_hash</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">random_bit</span><span class="hl-1"> </span><span class="hl-0">boolean</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">accumulated_seed</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">era_end</span><span class="hl-1"> </span><span class="hl-0">boolean</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">timestamp_utc</span><span class="hl-1"> </span><span class="hl-0">timestamp</span><span class="hl-1"> </span><span class="hl-0">with</span><span class="hl-1"> </span><span class="hl-0">time</span><span class="hl-1"> </span><span class="hl-0">zone</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">era_id</span><span class="hl-1"> </span><span class="hl-0">integer</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">block_height</span><span class="hl-1"> </span><span class="hl-0">integer</span><span class="hl-1"> </span><span class="hl-3">NOT</span><span class="hl-1"> </span><span class="hl-3">NULL</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">protocol_version</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">20</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">proposer</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">68</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">deploy_hashes</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">)[],</span><br/><span class="hl-1">    </span><span class="hl-0">transfer_hashes</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">64</span><span class="hl-1">)[],</span><br/><span class="hl-1">    </span><span class="hl-0">api_version</span><span class="hl-1"> </span><span class="hl-0">character</span><span class="hl-1"> </span><span class="hl-4">varying</span><span class="hl-1">(</span><span class="hl-7">20</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-3">CONSTRAINT</span><span class="hl-1"> </span><span class="hl-0">pk_blocks_id</span><span class="hl-1"> </span><span class="hl-3">PRIMARY</span><span class="hl-1"> </span><span class="hl-4">KEY</span><span class="hl-1"> (</span><span class="hl-0">block_height</span><span class="hl-1">)</span><br/><span class="hl-1">)</span>
+</code></pre>
+<p>The <code>writeOptions</code> argument for the PostgresClient will be the same options used for a <code>node-pg</code> Client.</p>
+<p>Initialize other classes used for processing blocks:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">fetcher</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">BlockFetcher</span><span class="hl-1">(</span><span class="hl-0">blockchain</span><span class="hl-1">);</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">parser</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">BlockParser</span><span class="hl-1">();</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">datastore</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">PostgresClient</span><span class="hl-1">(</span><span class="hl-0">writeOptions</span><span class="hl-1">);</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">blocks</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">Blocks</span><span class="hl-1">(</span><span class="hl-0">datastore</span><span class="hl-1">);</span>
+</code></pre>
+<p>You can now fetch a block, parse it and add to your data store:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">blockFetcherResult</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">fetcher</span><span class="hl-1">.</span><span class="hl-4">apply</span><span class="hl-1">(</span><span class="hl-7">700000</span><span class="hl-1">);</span>
+</code></pre>
+<p>The result will have the following fields:</p>
+<pre><code class="language-typescript"><span class="hl-2">type</span><span class="hl-1"> </span><span class="hl-8">BlockFetcherResult</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-0">success</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">error</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">height</span><span class="hl-1">?: </span><span class="hl-8">number</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">block</span><span class="hl-1">?: </span><span class="hl-8">any</span><span class="hl-1">;</span><br/><span class="hl-1">};</span>
+</code></pre>
+<p>If the request failed or encountered an error, success will be false and an error message may be present.</p>
+<p>Parse the block resulting in fields that map to the block model in the data store:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">block</span><span class="hl-1"> = </span><span class="hl-0">blockFetcherResult</span><span class="hl-1">.</span><span class="hl-0">block</span><span class="hl-1">;</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">parserResult</span><span class="hl-1"> = </span><span class="hl-0">parser</span><span class="hl-1">.</span><span class="hl-4">apply</span><span class="hl-1">(</span><span class="hl-0">block</span><span class="hl-1">);</span>
+</code></pre>
+<p>The result will have the following fields, similar to the BlockFetcherResult:</p>
+<pre><code class="language-typescript"><span class="hl-2">type</span><span class="hl-1"> </span><span class="hl-8">BlockParserResult</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-0">success</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">error</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">height</span><span class="hl-1">?: </span><span class="hl-8">number</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">fields</span><span class="hl-1">?: </span><span class="hl-8">any</span><span class="hl-1">;</span><br/><span class="hl-1">};</span>
+</code></pre>
+<p>If the parser was successful, save the block to the datastore using the blocks model:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">fields</span><span class="hl-1"> = </span><span class="hl-0">parserResult</span><span class="hl-1">.</span><span class="hl-0">fields</span><span class="hl-1">;</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">result</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">blocks</span><span class="hl-1">.</span><span class="hl-4">create</span><span class="hl-1">(</span><span class="hl-0">fields</span><span class="hl-1">);</span>
+</code></pre>
+<p>The full process can be abstracted by using the BlockConsumer:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">blockConsumer</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">BlockConsumer</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-0">parser</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">fetcher</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-0">blocks</span><br/><span class="hl-1">);</span><br/><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">blockConsumerResult</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">blockConsumer</span><span class="hl-1">.</span><span class="hl-4">apply</span><span class="hl-1">(</span><span class="hl-7">700000</span><span class="hl-1">);</span>
+</code></pre>
+<p>The result will have the following fields:</p>
+<pre><code class="language-typescript"><span class="hl-2">type</span><span class="hl-1"> </span><span class="hl-8">BlockConsumerResult</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-0">success</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">error</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">height</span><span class="hl-1">?: </span><span class="hl-8">number</span><span class="hl-1">;</span><br/><span class="hl-1">};</span>
+</code></pre>
+<p>You can define your own data store to pass to the Blocks model constructor, if you aren&#39;t using postgres. It just needs to implement the IDataStore interface.</p>
+<p>Similarly, you can define your own Blocks model, if you are not using an SQL-based data store. It just needs to implement the IBlocks interface.</p>
+<p>Note: A future release will allow for interoperability with inversify&#39;s dependency injection.</p>
+
+<a href="#testing" id="testing" style="color: inherit; text-decoration: none;">
+  <h3>Testing:</h3>
+</a>
+<p>If you clone this repository directly, you can run the included unit tests with the npm command:</p>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">run</span><span class="hl-1"> </span><span class="hl-0">test</span>
+</code></pre>
+
+<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+  <h3>Documentation:</h3>
+</a>
+<p>Full documentation can be found in the <a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/docs/">docs</a> folder.</p>
+<ul>
+<li><a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/docs/REQUIREMENTS.md">Requirements</a></li>
+<li><a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/docs/INSTALLATION.md">Installation</a></li>
+<li><a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/docs/USAGE_OVERVIEW.md">Usage Overview</a></li>
+<li><a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/docs/typedocs/">typedocs</a></li>
+</ul>
+<p>The project was initiated with DEVxDAO proposal <a href="https://portal.devxdao.com/app/proposal/451">#451</a></p>
+<p>Based on <a href="https://casper.network/en/network">casper.network</a></p>
+
+<a href="#opensource-components" id="opensource-components" style="color: inherit; text-decoration: none;">
+  <h3>Opensource components:</h3>
+</a>
+<ul>
+<li><a href="https://nodejs.org">NodeJS</a></li>
+<li><a href="https://www.typescriptlang.org/">TypeScript</a></li>
+<li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+<li><a href="https://node-postgres.com/">node-postgres</a></li>
+</ul>
+
+<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+  <h3>Contributing</h3>
+</a>
+<p>Please see <a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/CONTRIBUTING.md">Contributing Guidelines</a>.</p>
+
+<a href="#code-of-conduct" id="code-of-conduct" style="color: inherit; text-decoration: none;">
+  <h3>Code of Conduct</h3>
+</a>
+<p>Please see <a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a>.</p>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h3>License</h3>
+</a>
+<p>This project is licensed under <a href="https://github.com/fluidefi/fluidefi-caspernet-aggregator-tools/blob/master/LICENSE.md">MIT license</a>.</p>
+
+<a href="#about-us" id="about-us" style="color: inherit; text-decoration: none;">
+  <h3>About us:</h3>
+</a>
+<ul>
+<li><a href="https://fluidefi.com/">FLUIDEFI.COM</a></li>
+</ul>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class"><a href="classes/BlockConsumer.html" class="tsd-kind-icon">Block<wbr/>Consumer</a></li><li class="tsd-kind-class"><a href="classes/BlockFetcher.html" class="tsd-kind-icon">Block<wbr/>Fetcher</a></li><li class="tsd-kind-class"><a href="classes/BlockParser.html" class="tsd-kind-icon">Block<wbr/>Parser</a></li><li class="tsd-kind-class"><a href="classes/CasperBlockchain.html" class="tsd-kind-icon">Casper<wbr/>Blockchain</a></li><li class="tsd-kind-interface"><a href="interfaces/IBlockConsumer.html" class="tsd-kind-icon">IBlock<wbr/>Consumer</a></li><li class="tsd-kind-interface"><a href="interfaces/IBlockFetcher.html" class="tsd-kind-icon">IBlock<wbr/>Fetcher</a></li><li class="tsd-kind-interface"><a href="interfaces/IBlockParser.html" class="tsd-kind-icon">IBlock<wbr/>Parser</a></li><li class="tsd-kind-interface"><a href="interfaces/IBlockchain.html" class="tsd-kind-icon">IBlockchain</a></li><li class="tsd-kind-interface"><a href="interfaces/IBlocksWorker.html" class="tsd-kind-icon">IBlocks<wbr/>Worker</a></li><li class="tsd-kind-interface"><a href="interfaces/IDataStore.html" class="tsd-kind-icon">IData<wbr/>Store</a></li><li class="tsd-kind-type-alias"><a href="modules.html#BlockConsumerResult" class="tsd-kind-icon">Block<wbr/>Consumer<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#BlockFetcherResult" class="tsd-kind-icon">Block<wbr/>Fetcher<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#BlockParserResult" class="tsd-kind-icon">Block<wbr/>Parser<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#BlocksWorkerResult" class="tsd-kind-icon">Blocks<wbr/>Worker<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#CasperBlockFields" class="tsd-kind-icon">Casper<wbr/>Block<wbr/>Fields</a></li><li class="tsd-kind-type-alias"><a href="modules.html#GetBlockResult" class="tsd-kind-icon">Get<wbr/>Block<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#ReadQueryResult" class="tsd-kind-icon">Read<wbr/>Query<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#SaveBlockResult" class="tsd-kind-icon">Save<wbr/>Block<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WriteQueryResult" class="tsd-kind-icon">Write<wbr/>Query<wbr/>Result</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>

@@ -4,31 +4,25 @@ import { IBlockConsumer } from '../../../src';
 import { IBlockFetcher } from '../../../src';
 import { IBlockParser } from '../../../src';
 import { blocks, parsedBlocks } from '../../fixtures/blocks';
-import {Blocks} from '../../../src';
-import {MockPostgresClient} from "../../mocks/MockPostgresClient";
-import {IDataStore} from '../../../src';
-import {IBlocks} from '../../../src';
 import {MockBlockFetcher} from "../../mocks/MockBlockFetcher";
 import {MockBlockParser} from "../../mocks/MockBlockParser";
-import {createBlocksTableQuery, createProcessLogTableQuery} from "../../fixtures/queries";
+import {IBlockSaver} from "../../../src/interfaces/datastore/IBlockSaver";
+import {MockBlockSaver} from "../../mocks/MockBlockSaver";
 
 describe('BlockConsumer', async () => {
   let blockConsumer: IBlockConsumer;
 
   before(async () => {
     const blockFetcher: IBlockFetcher = new MockBlockFetcher();
-    (<MockBlockFetcher>blockFetcher).injectBlocks(blocks);
+    (blockFetcher as MockBlockFetcher).injectBlocks(blocks);
     const blockParser: IBlockParser = new MockBlockParser();
-    (<MockBlockParser>blockParser).injectParsedBlocks(parsedBlocks);
-    const datastore: IDataStore = new MockPostgresClient();
-    const blocksModel: IBlocks = new Blocks(datastore);
-    await datastore.write(createBlocksTableQuery, []);
-    await datastore.write(createProcessLogTableQuery, []);
+    (blockParser as MockBlockParser).injectParsedBlocks(parsedBlocks);
+    const blockSaver: IBlockSaver = new MockBlockSaver();
 
     blockConsumer = new BlockConsumer(
       blockParser,
       blockFetcher,
-      blocksModel
+      blockSaver
     );
   });
 
@@ -62,7 +56,6 @@ describe('BlockConsumer', async () => {
         const result = await blockConsumer.apply(height);
         expect(!!result).to.eql(true);
         expect(!!result.success).to.eql(false);
-        expect(!!result.error).to.eql(true);
       });
     });
   });
