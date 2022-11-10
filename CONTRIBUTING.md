@@ -22,14 +22,24 @@ feature: feature_name
 
 When you are ready, request review for your feature PR on Github's UI, and approval + conversation resolution is required before the branch can be merged.
 
-Merge your feature back into develop with the following:
+Once approved, merge your branch develop in GitHub's UI, being sure to squash commits.  If you need to resolve conflicts, do the following:
 
 ```
 git checkout develop
-git merge --no-ff feature_name
-git branch -d feature_name
-git push origin develop
+git pull origin develop
+git checkout feature/feature_name
+git merge --no-ff develop
 ```
+
+Now you resolve the conflicts locally. And then commit the changes with:
+
+```
+git add .
+git commit -m "merge develop into feature branch"
+git push origin feature/feature_name
+```
+
+No you should be good to Squash and Merge in the UI.
 
 #### Releases
 
@@ -40,48 +50,74 @@ After your feature has been approved and merged into the develop branch, start t
 ```
 git checkout develop
 git pull origin develop
-git checkout -b release/x.y.0
+git checkout -b release/x.y.z
 ```
 
 Create a PR for your release with the title:
 
 ```
-release: x.y.0
+release: x.y.z
 ```
 
 and description that matches the entry as it will appear in the changelog:
 
 ```
-## Release x.y.0
+## Release x.y.z
 ### Added:
  - my new great feature
 ### Changed:
  - something that needed to be improved
 ```
 
-Update the changelog and bump the version in package.json to x.y.0. Fix any bugs that may be found in the release branch.
+Update the changelog and bump the version in package.json to x.y.z. Fix any bugs that may be found in the release branch.
 
-Request review for your PR on Github. Once approved, merge your release branch into main and tag:
+Request review for your PR on Github. Once approved, merge your release branch into main using the UI. Make sure you squash commits.
+
+If you have merge conflicts resolve them locally with:
 
 ```
 git checkout main
 git pull origin main
-git merge --no-ff release/x.y.0
-git tag -a 1.2
+git checkout release/x.y.z
+git merge --no-ff main
 ```
 
-Then merge the release branch into develop:
+Now you resolve the conflicts locally. And then commit the changes with:
+
+```
+git add .
+git commit -m "merge main into release branch"
+git push origin release/x.y.z
+```
+
+No you should be good to Squash and Merge in the UI.
+
+Next tag your release:
+
+```
+git checkout main
+git pull origin main
+git tag -a x.y.z
+git push origin --tags
+```
+
+Then create a PR to merge the release branch into develop. Use the same commands above if you need to resolve conflicts.
+
+Then merge the new tag into develop:
 
 ```
 git checkout develop
 git pull origin develop
-git merge --no-ff release/x.y.0
-git branch -d release/x.y.0
+git fetch --tags origin
+git merge x.y.z
+git push origin develop
 ```
 
 Once merged, a new version of the package will be published to npm by admin.
 
 #### Hotfixes
+
+##### TODO - update the hotfix git workflow to match the steps in the workflow for a feature
 
 Hotfix branches must be forked from main and merged into main and develop.
 
@@ -108,6 +144,7 @@ git checkout main
 git pull origin main
 git merge --no-ff hotfix/hotfix_name
 git tag -a x.y.z
+git push origin --tags
 ```
 
 Then merge the hotfix into develop:
@@ -117,6 +154,14 @@ git checkout develop
 git pull origin develop
 git merge --no-ff hotfix/hotfix_name
 git branch -d hotfix/hotfix_name
+```
+
+Then merge the new tag into develop:
+
+```
+git fetch --tags origin
+git merge x.y.z
+git push origin develop
 ```
 
 Once merged, a new version of the package will be published to npm by admin.
